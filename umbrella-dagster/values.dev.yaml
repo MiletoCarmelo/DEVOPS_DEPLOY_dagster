@@ -1,0 +1,18 @@
+# values.yaml
+postgresql:
+  nameOverride: postgres
+  image:
+    repository: postgres
+    containerPort: 5432
+  
+  secretRef: postgres-secrets
+
+  replicaCount: 1
+
+  tailscale: 
+    status: true 
+    
+  # Dans votre values.yaml ou via un fichier service.yaml
+  service:
+    type: LoadBalancer
+    port: 5432
