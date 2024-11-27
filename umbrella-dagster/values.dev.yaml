@@ -1,18 +1,14 @@
 # values.yaml
-postgresql:
-  nameOverride: postgres
-  image:
-    repository: postgres
-    containerPort: 5432
-  
-  secretRef: postgres-secrets
-
+dagster:
+  # values.yaml
   replicaCount: 1
-
-  tailscale: 
-    status: true 
-    
-  # Dans votre values.yaml ou via un fichier service.yaml
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "latest"
   service:
-    type: LoadBalancer
-    port: 5432
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  container:
+    port: 80

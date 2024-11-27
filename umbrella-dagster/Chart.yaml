@@ -1,5 +1,5 @@
 apiVersion: v2
-name: pgDB
+name: dagster
 description: A Helm chart for dagster backend
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -24,7 +24,7 @@ version: 0.1.0
 appVersion: "1.1.0"
 
 dependencies:
-  - name: generic-postgres-backend
+  - name: generic-dagster-backend
     version: 0.1.0
     repository: https://raw.githubusercontent.com/MiletoCarmelo/DEVPOS_HELM_generic_dagster_backend/github-pages
-    alias: postgresql
+    alias: dagster
