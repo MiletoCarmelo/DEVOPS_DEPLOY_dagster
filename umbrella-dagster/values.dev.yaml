@@ -1,5 +1,7 @@
 # values.yaml
 dagster:
+  module: dagster
+  environment: dev
   # values.yaml
   replicaCount: 1
   image:
