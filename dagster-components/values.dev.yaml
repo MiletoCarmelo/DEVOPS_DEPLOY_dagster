@@ -39,9 +39,9 @@ dagster:
     - name: dagster-storage
       persistentVolumeClaim:
         claimName: dagster-storage
-    - name: dagster-config     # Ajout pour le dagster.yaml
+    - name: dagster-config
       configMap:
-        name: dagster-config
+        name: dagster-orchestrator-dev-config  # Même nom que dans le ConfigMap
   
   volumeMounts:
     - name: dagster-app
