@@ -41,7 +41,7 @@ dagster:
         claimName: dagster-storage
     - name: dagster-dev-config
       configMap:
-        name: dagster-ddev-config  # Même nom que dans le ConfigMap
+        name: dagster-dev-config  # Même nom que dans le ConfigMap
   
   volumeMounts:
     - name: dagster-dev-app
