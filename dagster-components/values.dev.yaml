@@ -33,22 +33,22 @@ dagster:
             key: password
   
   volumes:
-    - name: {{ .Release.Name }}-app
+    - name: dagster-dev-app
       configMap:
         name: dagster-app-code
-    - name: {{ .Release.Name }}-storage
+    - name: dagster-dev-storage
       persistentVolumeClaim:
         claimName: dagster-storage
-    - name: dagster-config
+    - name: dagster-dev-config
       configMap:
-        name: {{ .Release.Name }}-config  # Même nom que dans le ConfigMap
+        name: dagster-config  # Même nom que dans le ConfigMap
   
   volumeMounts:
-    - name: {{ .Release.Name }}-app
+    - name: dagster-dev-app
       mountPath: /opt/dagster/app
-    - name: {{ .Release.Name }}-storage
+    - name: dagster-dev-storage
       mountPath: /opt/dagster/dagster_home/storage
-    - name: {{ .Release.Name }}-config     # Ajout pour le dagster.yaml
+    - name: dagster-dev-config     # Ajout pour le dagster.yaml
       mountPath: /opt/dagster/dagster_home/dagster.yaml
       subPath: dagster.yaml
   
