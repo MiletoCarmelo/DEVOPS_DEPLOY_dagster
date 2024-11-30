@@ -2,3 +2,6 @@ dagster:
   module: dagster
   environment: dev
   replicas: 1
+
+  workspace:
+    file: dagster-components/workspace.yaml
