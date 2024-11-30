@@ -1,80 +1,80 @@
-dagster:
-  module: dagster
-  environment: dev
-  replicas: 1
-  
-  # Configuration du fichier dagster.yaml
-  filePath: "dagster-components/dagster.yaml"
-  
-  # Configuration de l'image
-  image:
-    # repository: ghcr.io/miletocarmelo/devops_helm_generic_dagster_backend/dagster
-    repository: ghcr.io/miletocarmelo/devops_deploy_dagster/dagster
-    tag: latest
-  
-  # Configuration des ports
-  ports:
-    containerPort: 3000
-  
-  serviceAccount:
-    create: true
-    name: dagster-dev
-    
-  # Configuration du service
-  service:
-    type: ClusterIP
-    port: 3000
-    targetPort: 3000
-  
-  # Variables d'environnement
-  env:
-    - name: DAGSTER_HOME
-      value: /opt/dagster/dagster_home
-    - name: POSTGRES_USER
-      valueFrom:
-        secretKeyRef:
-          name: postgres-secrets
-          key: POSTGRES_USER
-    - name: POSTGRES_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: postgres-secrets
-          key: POSTGRES_PASSWORD
-    - name: POSTGRES_DB
-      valueFrom:
-        secretKeyRef:
-          name: postgres-secrets
-          key: POSTGRES_DB
+# dagster:
+module: dagster
+environment: dev
+replicas: 1
 
-  # Configuration PostgreSQL
-  postgresql:
-    enabled: false
-    external:
-      host: "postgres-58b495dd4d7bdm7"
-      port: 5432
-      database: "dagster"
+# Configuration du fichier dagster.yaml
+filePath: "dagster-components/dagster.yaml"
+
+# Configuration de l'image
+image:
+  # repository: ghcr.io/miletocarmelo/devops_helm_generic_dagster_backend/dagster
+  repository: ghcr.io/miletocarmelo/devops_deploy_dagster/dagster
+  tag: latest
+
+# Configuration des ports
+ports:
+  containerPort: 3000
+
+serviceAccount:
+  create: true
+  name: dagster-dev
   
-  # Configuration des volumes
-  volumes:
-    - name: dagster-dev-app
-      configMap:
-        name: dagster-app-code
-    - name: dagster-dev-storage
-      persistentVolumeClaim:
-        claimName: dagster-storage
-    - name: dagster-dev-config
-      configMap:
-        name: dagster-dev-config
-        items:
-          - key: dagster.yaml
-            path: dagster.yaml
-  
-  # Configuration des montages de volumes
-  volumeMounts:
-    - name: dagster-dev-app
-      mountPath: /opt/dagster/app
-    - name: dagster-dev-storage
-      mountPath: /opt/dagster/dagster_home
-    - name: dagster-dev-config
-      mountPath: /opt/dagster/dagster_home/dagster.yaml
-      subPath: dagster.yaml
+# Configuration du service
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+
+# Variables d'environnement
+env:
+  - name: DAGSTER_HOME
+    value: /opt/dagster/dagster_home
+  - name: POSTGRES_USER
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secrets
+        key: POSTGRES_USER
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secrets
+        key: POSTGRES_PASSWORD
+  - name: POSTGRES_DB
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secrets
+        key: POSTGRES_DB
+
+# Configuration PostgreSQL
+postgresql:
+  enabled: false
+  external:
+    host: "postgres-58b495dd4d7bdm7"
+    port: 5432
+    database: "dagster"
+
+# Configuration des volumes
+volumes:
+  - name: dagster-dev-app
+    configMap:
+      name: dagster-app-code
+  - name: dagster-dev-storage
+    persistentVolumeClaim:
+      claimName: dagster-storage
+  - name: dagster-dev-config
+    configMap:
+      name: dagster-dev-config
+      items:
+        - key: dagster.yaml
+          path: dagster.yaml
+
+# Configuration des montages de volumes
+volumeMounts:
+  - name: dagster-dev-app
+    mountPath: /opt/dagster/app
+  - name: dagster-dev-storage
+    mountPath: /opt/dagster/dagster_home
+  - name: dagster-dev-config
+    mountPath: /opt/dagster/dagster_home/dagster.yaml
+    subPath: dagster.yaml
