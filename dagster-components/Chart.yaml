@@ -23,8 +23,8 @@ version: 0.1.0
 # It is recommended to use it with quotes.
 appVersion: "1.1.0"
 
-dependencies:
-  - name: generic-dagster-backend
-    version: 0.1.0
-    repository: https://raw.githubusercontent.com/MiletoCarmelo/DEVPOS_HELM_generic_dagster_backend/github-pages
-    alias: dagster
+# dependencies:
+#   - name: generic-dagster-backend
+#     version: 0.1.0
+#     repository: https://raw.githubusercontent.com/MiletoCarmelo/DEVPOS_HELM_generic_dagster_backend/github-pages
+#     alias: dagster
