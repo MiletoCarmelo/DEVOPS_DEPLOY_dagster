@@ -11,10 +11,16 @@ containers:
   name: dagster
   image: ghcr.io/miletocarmelo/devops_deploy_dagster/dagster
   tags: latest
+ ports:
+   containerPort: 3000
+ resources:
+   requests:
+     memory: "256Mi"
+     cpu: "100m"
+   limits:
+     memory: "512Mi" 
+     cpu: "200m"
 
-# Configuration des ports
-ports:
-  containerPort: 3000
 
 serviceAccount:
   create: true
