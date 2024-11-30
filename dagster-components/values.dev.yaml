@@ -60,6 +60,9 @@ dagster:
     - name: dagster-dev-config
       configMap:
         name: dagster-dev-config
+        items:
+          - key: dagster.yaml
+            path: dagster.yaml
   
   # Configuration des montages de volumes
   volumeMounts:
