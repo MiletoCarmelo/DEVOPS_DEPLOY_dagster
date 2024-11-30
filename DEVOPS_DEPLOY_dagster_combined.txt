@@ -1,0 +1,165 @@
+==== ./dagster-components/values.dev.yaml ====
+
+dagster:
+  module: dagster
+  environment: dev
+  replicas: 1
+  
+  image:
+    repository: ghcr.io/miletocarmelo/devops_helm_generic_dagster_backend/dagster
+    tag: latest
+  
+  ports:
+    containerPort: 3000
+  
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  
+  postgresql:
+    enabled: false
+    external:
+      host: "postgres-58b495dd4d7bdm7"
+      port: 5432
+      database: "dagster"
+      user:
+        valueFrom:
+          secretKeyRef:
+            name: postgres-auth
+            key: username
+      password:
+        valueFrom:
+          secretKeyRef:
+            name: postgres-auth
+            key: password
+  
+  volumes:
+    - name: dagster-dev-app
+      configMap:
+        name: dagster-app-code
+    - name: dagster-dev-storage
+      persistentVolumeClaim:
+        claimName: dagster-storage
+    - name: dagster-dev-config
+      configMap:
+        name: dagster-dev-config  # Même nom que dans le ConfigMap
+  
+  volumeMounts:
+    - name: dagster-dev-app
+      mountPath: /opt/dagster/app
+    - name: dagster-dev-storage
+      mountPath: /opt/dagster/dagster_home/storage
+    - name: dagster-dev-config     # Ajout pour le dagster.yaml
+      mountPath: /opt/dagster/dagster_home/dagster.yaml
+      subPath: dagster.yaml
+  
+  env:
+    - name: DAGSTER_HOME
+      value: /opt/dagster/dagster_home
+
+==== ./dagster-components/workspace.yaml ====
+
+load_from:
+  - grpc_server:
+      host: pipeline-successtest
+      port: 4000
+      location_name: "pipeline-successtest"
+
+==== ./dagster-components/Chart.yaml ====
+
+apiVersion: v2
+name: dagster
+description: A Helm chart for dagster backend
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "1.1.0"
+
+dependencies:
+  - name: generic-dagster-backend
+    version: 0.1.0
+    repository: https://raw.githubusercontent.com/MiletoCarmelo/DEVPOS_HELM_generic_dagster_backend/github-pages
+    alias: dagster
+
+
+==== ./dagster-components/templates/configmap.yaml ====
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.dagster.module }}-{{ .Values.dagster.environment }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  dagster.yaml: {{ .Files.Get "dagster-components/dagster.yaml" | nindent 4 }}
+
+==== ./dagster.yaml ====
+
+scheduler:
+  module: dagster.core.scheduler
+  class: DagsterDaemonScheduler
+
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+
+run_launcher:
+  module: dagster.core.launcher
+  class: DefaultRunLauncher
+
+run_storage:
+  module: dagster_postgres.run_storage
+  class: PostgresRunStorage
+  config:
+    postgres_db:
+      hostname: postgres-58b495dd4d7bdm7
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      db_name: ${POSTGRES_DB}
+      port: 5432
+
+event_log_storage:
+  module: dagster_postgres.event_log
+  class: PostgresEventLogStorage
+  config:
+    postgres_db:
+      hostname: postgres-58b495dd4d7bdm7
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      db_name: ${POSTGRES_DB}
+      port: 5432
+
+schedule_storage:
+  module: dagster_postgres.schedule_storage
+  class: PostgresScheduleStorage
+  config:
+    postgres_db:
+      hostname: postgres-58b495dd4d7bdm7
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      db_name: ${POSTGRES_DB}
+      port: 5432
+
+compute_logs:
+  module: dagster.core.storage.local_compute_log_manager
+  class: LocalComputeLogManager
+  config:
+    base_dir: /opt/dagster/dagster_home/compute_logs
+

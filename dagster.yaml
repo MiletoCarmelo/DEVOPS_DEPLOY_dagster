@@ -16,9 +16,9 @@ run_storage:
   config:
     postgres_db:
       hostname: postgres-58b495dd4d7bdm7
-      username: ${POSTGRES_USER}
-      password: ${POSTGRES_PASSWORD}
-      db_name: ${POSTGRES_DB}
+      username: ${POSTGRES_USER}  # correspond au secret
+      password: ${POSTGRES_PASSWORD}  # correspond au secret
+      db_name: ${POSTGRES_DB}  # correspond au secret
       port: 5432
 
 event_log_storage:

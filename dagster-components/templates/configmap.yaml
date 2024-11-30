@@ -4,4 +4,4 @@ metadata:
   name: {{ .Values.dagster.module }}-{{ .Values.dagster.environment }}-config
   namespace: {{ .Release.Namespace }}
 data:
-  dagster.yaml: {{ .Files.Get "dagster-components/dagster.yaml" | nindent 4 }}
+  dagster.yaml: {{ .Files.Get .Values.dagster.filePath | nindent 4 }}
