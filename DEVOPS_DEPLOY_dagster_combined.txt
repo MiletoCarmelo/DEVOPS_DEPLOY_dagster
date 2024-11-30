@@ -5,35 +5,53 @@ dagster:
   environment: dev
   replicas: 1
   
+  # Configuration du fichier dagster.yaml
+  filePath: "dagster.yaml"
+  
+  # Configuration de l'image
   image:
     repository: ghcr.io/miletocarmelo/devops_helm_generic_dagster_backend/dagster
     tag: latest
   
+  # Configuration des ports
   ports:
     containerPort: 3000
   
+  # Configuration du service
   service:
     type: ClusterIP
     port: 3000
     targetPort: 3000
   
+  # Variables d'environnement
+  env:
+    - name: DAGSTER_HOME
+      value: /opt/dagster/dagster_home
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: POSTGRES_USER
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: POSTGRES_PASSWORD
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: POSTGRES_DB
+
+  # Configuration PostgreSQL
   postgresql:
     enabled: false
     external:
       host: "postgres-58b495dd4d7bdm7"
       port: 5432
       database: "dagster"
-      user:
-        valueFrom:
-          secretKeyRef:
-            name: postgres-auth
-            key: username
-      password:
-        valueFrom:
-          secretKeyRef:
-            name: postgres-auth
-            key: password
   
+  # Configuration des volumes
   volumes:
     - name: dagster-dev-app
       configMap:
@@ -43,20 +61,17 @@ dagster:
         claimName: dagster-storage
     - name: dagster-dev-config
       configMap:
-        name: dagster-dev-config  # Même nom que dans le ConfigMap
+        name: dagster-dev-config
   
+  # Configuration des montages de volumes
   volumeMounts:
     - name: dagster-dev-app
       mountPath: /opt/dagster/app
     - name: dagster-dev-storage
-      mountPath: /opt/dagster/dagster_home/storage
-    - name: dagster-dev-config     # Ajout pour le dagster.yaml
+      mountPath: /opt/dagster/dagster_home
+    - name: dagster-dev-config
       mountPath: /opt/dagster/dagster_home/dagster.yaml
       subPath: dagster.yaml
-  
-  env:
-    - name: DAGSTER_HOME
-      value: /opt/dagster/dagster_home
 
 ==== ./dagster-components/workspace.yaml ====
 
@@ -108,9 +123,10 @@ metadata:
   name: {{ .Values.dagster.module }}-{{ .Values.dagster.environment }}-config
   namespace: {{ .Release.Namespace }}
 data:
-  dagster.yaml: {{ .Files.Get "dagster-components/dagster.yaml" | nindent 4 }}
+  dagster.yaml: |-
+{{ .Files.Get "dagster-components/dagster.yaml" | indent 4 }}
 
-==== ./dagster.yaml ====
+==== ./dagster-components/dagster.yaml ====
 
 scheduler:
   module: dagster.core.scheduler
@@ -130,9 +146,9 @@ run_storage:
   config:
     postgres_db:
       hostname: postgres-58b495dd4d7bdm7
-      username: ${POSTGRES_USER}
-      password: ${POSTGRES_PASSWORD}
-      db_name: ${POSTGRES_DB}
+      username: ${POSTGRES_USER}  # correspond au secret
+      password: ${POSTGRES_PASSWORD}  # correspond au secret
+      db_name: ${POSTGRES_DB}  # correspond au secret
       port: 5432
 
 event_log_storage:
