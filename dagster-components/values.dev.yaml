@@ -4,7 +4,7 @@ dagster:
   replicas: 1
   
   # Configuration du fichier dagster.yaml
-  filePath: "./dagster.yaml"
+  filePath: "../dagster.yaml"  # Chemin relatif depuis le dossier dagster-components
   
   # Configuration de l'image
   image:
