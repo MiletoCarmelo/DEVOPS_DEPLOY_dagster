@@ -7,10 +7,10 @@ replicas: 1
 filePath: "dagster-components/dagster.yaml"
 
 # Configuration de l'image
-image:
-  # repository: ghcr.io/miletocarmelo/devops_helm_generic_dagster_backend/dagster
-  repository: ghcr.io/miletocarmelo/devops_deploy_dagster/dagster
-  tag: latest
+containers:
+  name: dagster
+  image: ghcr.io/miletocarmelo/devops_deploy_dagster/dagster
+  tags: latest
 
 # Configuration des ports
 ports:
