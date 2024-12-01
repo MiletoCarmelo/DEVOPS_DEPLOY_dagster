@@ -5,11 +5,5 @@ metadata:
   name: dagster-workspace
   namespace: {{ .Release.Namespace }}
 data:
-  workspace.yaml: |
-    load_from:
-      - grpc_server:
-          host: pipeline-successtest
-          port: 4000
-          location_name: "pipeline-successtest"
-
-#{{ .Files.Get .Values.dagster.workspace.file | indent 4 }}
+  workspace.yaml: |-
+    {{- .Files.Get .Values.dagster.workspace.file | nindent 4 }}
