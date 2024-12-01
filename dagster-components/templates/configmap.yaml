@@ -6,4 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   workspace.yaml: |
-    {{ .Files.Get .Values.workspace.file | indent 4 }}
+    load_from:
+      - grpc_server:
+          host: pipeline-successtest
+          port: 4000
+          location_name: "pipeline-successtest"
