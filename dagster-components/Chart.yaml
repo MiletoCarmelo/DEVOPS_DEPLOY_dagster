@@ -6,6 +6,6 @@ version: 0.1.0
 appVersion: "1.1.0"
 dependencies:
   - name: generic-dagster-backend
-    version: 0.1.6
+    version: 0.1.5
     repository: https://raw.githubusercontent.com/MiletoCarmelo/DEVPOS_HELM_generic_dagster_backend/github-pages
     alias: dagster
