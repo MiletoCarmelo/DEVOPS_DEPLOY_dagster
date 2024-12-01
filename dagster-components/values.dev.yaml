@@ -4,3 +4,6 @@ dagster:
   replicas: 1
   workspace:
     file: workspace.yaml
+  service:
+    tailscale:
+      enabled: true  # Activer Tailscale pour ce service

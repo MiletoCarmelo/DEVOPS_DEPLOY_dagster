@@ -1,0 +1,1 @@
+kubectl port-forward -n dagster-dev svc/dagster-dev-service 3000:3000 &
