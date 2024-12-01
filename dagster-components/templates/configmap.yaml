@@ -6,4 +6,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   workspace.yaml: |
-    {{ .Files.Get "workspace.yaml" | indent 4 }}
+    {{ .Files.Get .Values.workspace.file | indent 4 }}

@@ -4,4 +4,4 @@ dagster:
   replicas: 1
 
   workspace:
-    file: dagster-components/workspace.yaml
+    file: workspace.yaml
